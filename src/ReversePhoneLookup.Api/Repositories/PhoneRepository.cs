@@ -27,5 +27,19 @@ namespace ReversePhoneLookup.Api.Repositories
                 .Include(x => x.Contacts)
                 .FirstOrDefaultAsync(cancellationToken);
         }
+
+
+        public async Task<Phone> AddPhoneAsync(Phone phone)
+        {
+            await context.Phones.AddAsync(phone);
+            await context.SaveChangesAsync();
+            return phone;
+        }
+
+        public async Task<bool> IsPhoneExists(string phone, CancellationToken cancellationToken)
+        {
+            var phoneObject = await context.Phones.FirstOrDefaultAsync(x => x.Value == phone, cancellationToken);
+            return phoneObject != null;
+        }
     }
 }

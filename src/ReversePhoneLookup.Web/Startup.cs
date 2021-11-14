@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using ReversePhoneLookup.Abstract.Repositories;
 using ReversePhoneLookup.Abstract.Services;
 using ReversePhoneLookup.Api;
@@ -36,9 +37,15 @@ namespace ReversePhoneLookup.Web
         {
             services.AddDbContext<PhoneLookupContext>(options =>
             {
-                options.UseNpgsql(Configuration.GetConnectionString("Default"));
+                options.UseSqlServer(Configuration.GetConnectionString("Default"), b => b.MigrationsAssembly("ReversePhoneLookup.Web"));
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PhoneLookup", Version = "v1" });
+            });
+
+            services.AddTransient<IContactRepository, ContactRepository>();
             services.AddTransient<IPhoneRepository, PhoneRepository>();
             services.AddTransient<IPhoneService, PhoneService>();
             services.AddTransient<ILookupService, LookupService>();
@@ -67,6 +74,8 @@ namespace ReversePhoneLookup.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PhoneLookup v1"));
             }
 
             app.UseRouting();
@@ -77,7 +86,7 @@ namespace ReversePhoneLookup.Web
 
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    await context.Response.WriteAsync("Hello ReversePhoneLookup.\nTODO: Add POST /phone, POST /contacts and Integration tests!");
                 });
             });
         }

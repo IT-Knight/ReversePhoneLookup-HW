@@ -24,7 +24,7 @@ namespace ReversePhoneLookup.Api
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Russian_Russia.1251");
+            //modelBuilder.HasAnnotation("Relational:Collation", "Russian_Russia.1251");
 
             modelBuilder.Entity<Contact>(entity =>
             {

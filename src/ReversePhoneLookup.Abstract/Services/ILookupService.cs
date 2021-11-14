@@ -11,5 +11,7 @@ namespace ReversePhoneLookup.Abstract.Services
     public interface ILookupService
     {
         Task<LookupResponse> LookupAsync(LookupRequest request, CancellationToken cancellationToken);
+
+        Task<LookupResponse> AddContactWithPhoneAsync(AddPhoneRequest request, CancellationToken cancellationToken);
     }
 }

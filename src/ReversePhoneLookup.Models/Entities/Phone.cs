@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ReversePhoneLookup.Api.Models.Entities
 {
-    public partial class Phone
+    public class Phone
     {
         public Phone()
         {

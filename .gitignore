@@ -27,6 +27,8 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+
+
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
@@ -348,3 +350,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Rider
+.idea/
