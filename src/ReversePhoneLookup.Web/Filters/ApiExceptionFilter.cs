@@ -17,7 +17,8 @@ namespace ReversePhoneLookup.Web.Filters
         {
             { StatusCode.ServerError, "Internal error" },
             { StatusCode.InvalidPhoneNumber, "Invalid phone number" },
-            { StatusCode.NoDataFound, "No data found" }
+            { StatusCode.NoDataFound, "No data found" },
+            { StatusCode.InvalidPersonName, "InvalidPersonName" }
         };
 
         public void OnException(ExceptionContext context)
