@@ -2,7 +2,7 @@
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 
-namespace Common
+namespace ReversePhoneLookup.IntegrationTests.Common
 {
     /// <summary>
     /// This helps us to use Moq in tandem with AutoFixture

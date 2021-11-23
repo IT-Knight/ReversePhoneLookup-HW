@@ -6,7 +6,7 @@ using ReversePhoneLookup.Api.Models.Entities;
 using ReversePhoneLookup.IntegrationTests.Common;
 using Xunit;
 
-namespace ReversePhoneLookup.IntegrationTests
+namespace ReversePhoneLookup.IntegrationTests.Controllers
 {
     public class PhoneControllerTests : IClassFixture<CustomWebApplicationFactory<StartupSUT>>
     {

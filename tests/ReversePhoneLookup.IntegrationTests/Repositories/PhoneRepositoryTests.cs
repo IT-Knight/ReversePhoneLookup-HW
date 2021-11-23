@@ -9,20 +9,20 @@ using ReversePhoneLookup.Api.Repositories;
 using ReversePhoneLookup.IntegrationTests.Common;
 using Xunit;
 
-namespace ReversePhoneLookup.IntegrationTests
+namespace ReversePhoneLookup.IntegrationTests.Repositories
 {
     public class PhoneRepositoryTests : IClassFixture<CustomWebApplicationFactory<StartupSUT>>, IDisposable
     {
         private readonly DbFixture fixture;
-        private readonly PhoneLookupContext _context;
+        private readonly PhoneLookupContext context;
         private readonly PhoneRepository sut;
         private readonly Phone phone;
 
         public PhoneRepositoryTests()
         {
             fixture = new DbFixture();
-            _context = fixture.DbContext;
-            sut = new PhoneRepository(_context);
+            context = fixture.DbContext;
+            sut = new PhoneRepository(context);
             phone = new Phone { Value = "060658132" };
         }
         
@@ -39,22 +39,22 @@ namespace ReversePhoneLookup.IntegrationTests
 
             // Act
             await sut.AddPhoneAsync(phone);
-            var phoneEntities = await _context.Phones.Where(x => x.Value == phone.Value).ToListAsync();
+            var phoneEntities = await context.Phones.Where(x => x.Value == phone.Value).ToListAsync();
 
             // Assert
             Assert.Single(phoneEntities);
             Assert.NotEqual(0, phoneEntities[0].Id);
             Assert.Equal(phone.Value, phoneEntities[0].Value);
 
-            await DeletePhoneCleanup();  // Does all tests run async? can be conflicts?
+            await DeletePhoneCleanup();  // Does all tests run async? can be conflicts? Actually, yes.
         }
 
         [Fact]
         public async Task GetPhoneDataAsync_PhoneExist_ShouldReturnPhoneObject()
         {
             // Arrange
-            await _context.Phones.AddAsync(phone);
-            await _context.SaveChangesAsync();
+            await context.Phones.AddAsync(phone);
+            await context.SaveChangesAsync();
             
             // Act
             var result = await sut.GetPhoneDataAsync(phone.Value, CancellationToken.None);
@@ -77,8 +77,8 @@ namespace ReversePhoneLookup.IntegrationTests
         public async Task IsPhoneExists_PhoneExists_ReturnsTrue()
         {
             // Arrange
-            await _context.Phones.AddAsync(phone);
-            await _context.SaveChangesAsync();
+            await context.Phones.AddAsync(phone);
+            await context.SaveChangesAsync();
 
             // Act
             var result = await sut.IsPhoneExists(phone.Value, CancellationToken.None);
@@ -98,8 +98,8 @@ namespace ReversePhoneLookup.IntegrationTests
         
         private async Task DeletePhoneCleanup()
         {
-            _context.Phones.Remove(phone);
-            await _context.SaveChangesAsync();
+            context.Phones.Remove(phone);
+            await context.SaveChangesAsync();
         }
     }
 }
