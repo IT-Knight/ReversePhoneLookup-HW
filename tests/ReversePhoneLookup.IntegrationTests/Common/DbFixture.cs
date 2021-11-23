@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ReversePhoneLookup.Api;
 
-namespace ReversePhoneLookup.IntegrationTests
+namespace ReversePhoneLookup.IntegrationTests.Common
 {
     public class DbFixture : IDisposable
     {

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using ReversePhoneLookup.Api.Models.Entities;
+using ReversePhoneLookup.IntegrationTests.Common;
 using Xunit;
 
 namespace ReversePhoneLookup.IntegrationTests
@@ -15,7 +14,7 @@ namespace ReversePhoneLookup.IntegrationTests
 
         public PhoneControllerTests(CustomWebApplicationFactory<StartupSUT> factory)
         {
-            this.client = factory.CreateClient();
+            client = factory.CreateClient();
         }
 
         [Fact]
