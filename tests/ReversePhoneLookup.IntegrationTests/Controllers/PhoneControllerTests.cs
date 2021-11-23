@@ -1,10 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReversePhoneLookup.Api.Models.Entities;
 using ReversePhoneLookup.IntegrationTests.Common;
+using ReversePhoneLookup.Models.Requests;
+using ReversePhoneLookup.Models.Responses;
 using Xunit;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ReversePhoneLookup.IntegrationTests.Controllers
 {
@@ -49,6 +56,29 @@ namespace ReversePhoneLookup.IntegrationTests.Controllers
 
                 Assert.Equal("+37367123456", json["phone"]);
             }
+        }
+
+        [Fact]
+        public async Task Phone_ValidData_ShouldReturnStatusOkWithLookupResponseObject() 
+        {
+            // Arrange
+            using var fixture = new DbFixture();  
+            string url = "/phone";
+            
+            var request = new AddPhoneRequest { Phone = "+37360658132", Names = new List<string> { "Malder", "Scaly", "Jhon" } };
+            HttpContent content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            
+            // Act
+            var response = await client.PostAsync(url, content);
+            LookupResponse objResult = JsonConvert.DeserializeObject<LookupResponse>(await response.Content.ReadAsStringAsync());
+            // Built-in System.Text.Json cannot deserialize this! Why?
+            
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(objResult.Names, request.Names);
+            Assert.Equal(objResult.Phone, request.Phone);
+            Assert.Null(objResult.Operator);
         }
     }
 }
