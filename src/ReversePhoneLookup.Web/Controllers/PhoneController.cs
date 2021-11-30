@@ -24,7 +24,7 @@ namespace ReversePhoneLookup.Web.Controllers
         }
 
         [HttpPost("/phone")]
-        public async Task<IActionResult> Phone([FromBody] AddPhoneRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddPhone([FromBody] AddPhoneRequest request, CancellationToken cancellationToken)
         {
             var result = await lookupService.AddContactWithPhoneAsync(request, cancellationToken); 
             return Ok(result);

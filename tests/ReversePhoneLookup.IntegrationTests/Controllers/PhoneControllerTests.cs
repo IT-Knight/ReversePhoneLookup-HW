@@ -73,6 +73,10 @@ namespace ReversePhoneLookup.IntegrationTests.Controllers
             LookupResponse objResult = JsonConvert.DeserializeObject<LookupResponse>(await response.Content.ReadAsStringAsync());
             // Built-in System.Text.Json cannot deserialize this! Why?
             
+            // надо + и базу данных проверять, т.к. интеграционные.
+            
+            // TODO: проверить что попало в базу данных.
+            
             // Assert
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

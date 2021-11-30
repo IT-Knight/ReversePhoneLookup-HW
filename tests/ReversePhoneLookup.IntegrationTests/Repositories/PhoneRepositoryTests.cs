@@ -46,7 +46,7 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             Assert.NotEqual(0, phoneEntities[0].Id);
             Assert.Equal(phone.Value, phoneEntities[0].Value);
 
-            await DeletePhoneCleanup();  // Does all tests run async? can be conflicts? Actually, yes.
+            await DeletePhoneCleanup();
         }
 
         [Fact]
