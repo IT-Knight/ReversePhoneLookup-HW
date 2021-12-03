@@ -11,6 +11,7 @@ using Xunit;
 
 namespace ReversePhoneLookup.IntegrationTests.Repositories
 {
+    [TestCaseOrderer("ReversePhoneLookup.IntegrationTests.Common.PriorityOrderer", "ReversePhoneLookup")]
     public class PhoneRepositoryTests : IClassFixture<CustomWebApplicationFactory<StartupSUT>>, IDisposable
     {
         private readonly DbFixture fixture;
@@ -32,7 +33,19 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             GC.SuppressFinalize(this);
         }
 
-        [Fact]
+        private async Task InitialAddPhone()
+        {
+            await context.Phones.AddAsync(phone);
+            await context.SaveChangesAsync();
+        }
+
+        private async Task DeletePhoneCleanup()
+        {
+            context.Phones.Remove(phone);
+            await context.SaveChangesAsync();
+        }
+        
+        [Fact, TestPriority(1)]
         public async Task AddPhoneAsync_ShouldReturnSinglePhoneWithNotZeroIdAndNumberEqualsInput()
         {
             // Arrange
@@ -49,12 +62,11 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             await DeletePhoneCleanup();
         }
 
-        [Fact]
+        [Fact, TestPriority(2)]
         public async Task GetPhoneDataAsync_PhoneExist_ShouldReturnPhoneObject()
         {
             // Arrange
-            await context.Phones.AddAsync(phone);
-            await context.SaveChangesAsync();
+            await InitialAddPhone();
             
             // Act
             var result = await sut.GetPhoneDataAsync(phone.Value, CancellationToken.None);
@@ -66,19 +78,18 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             await DeletePhoneCleanup();
         }
         
-        [Fact]
+        [Fact, TestPriority(3)]
         public async Task GetPhoneDataAsync_PhoneNotExist_ShouldReturnNull()
         {
             var result = await sut.GetPhoneDataAsync(phone.Value, CancellationToken.None);
             Assert.Null(result);
         }
 
-        [Fact]
+        [Fact, TestPriority(4)]
         public async Task IsPhoneExists_PhoneExists_ReturnsTrue()
         {
             // Arrange
-            await context.Phones.AddAsync(phone);
-            await context.SaveChangesAsync();
+            await InitialAddPhone();
 
             // Act
             var result = await sut.IsPhoneExists(phone.Value, CancellationToken.None);
@@ -88,18 +99,12 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             
             await DeletePhoneCleanup();
         }
-        [Fact]
+        
+        [Fact, TestPriority(5)]
         public async Task IsPhoneExists_PhoneExists_ReturnsFalse()
         {
             var result = await sut.IsPhoneExists(phone.Value, CancellationToken.None);
             Assert.False(result);
-        }
-        
-        
-        private async Task DeletePhoneCleanup()
-        {
-            context.Phones.Remove(phone);
-            await context.SaveChangesAsync();
         }
     }
 }

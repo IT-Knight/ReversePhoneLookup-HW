@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReversePhoneLookup.Api.Models.Entities;
@@ -15,6 +14,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ReversePhoneLookup.IntegrationTests.Controllers
 {
+    [TestCaseOrderer("ReversePhoneLookup.IntegrationTests.Common.PriorityOrderer", "ReversePhoneLookup")]
     public class PhoneControllerTests : IClassFixture<CustomWebApplicationFactory<StartupSUT>>
     {
         private readonly HttpClient client;
@@ -24,7 +24,7 @@ namespace ReversePhoneLookup.IntegrationTests.Controllers
             client = factory.CreateClient();
         }
 
-        [Fact]
+        [Fact, TestPriority(7)]
         public async Task Lookup_ValidData_ShouldReturn200()
         {
             using (var fixture = new DbFixture())
@@ -58,7 +58,7 @@ namespace ReversePhoneLookup.IntegrationTests.Controllers
             }
         }
 
-        [Fact]
+        [Fact, TestPriority(8)]
         public async Task Phone_ValidData_ShouldReturnStatusOkWithLookupResponseObject() 
         {
             // Arrange

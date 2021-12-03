@@ -25,7 +25,7 @@ namespace ReversePhoneLookup.IntegrationTests.Common
 
         public void Dispose()
         {
-            DbContext.Database.EnsureDeleted();
+            // DbContext.Database.EnsureDeleted();
         }
     }
 }

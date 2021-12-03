@@ -11,6 +11,7 @@ using Xunit;
 
 namespace ReversePhoneLookup.IntegrationTests.Repositories
 {
+    [TestCaseOrderer("ReversePhoneLookup.IntegrationTests.Common.PriorityOrderer", "ReversePhoneLookup")]
     public class ContactRepositoryTests : IClassFixture<CustomWebApplicationFactory<StartupSUT>>, IDisposable
     {
         private readonly DbFixture fixture;
@@ -35,10 +36,16 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             return phone.Id;
         }
 
-        private void DeleteContactCleanup()
+        private async Task InitialAddContact()
+        {
+            await context.AddAsync(contact);
+            await context.SaveChangesAsync();
+        }
+
+        private async Task DeleteContactCleanup()
         {
             context.Contacts.Remove(contact);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public void Dispose()
@@ -46,7 +53,7 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             fixture.Dispose();
         }
 
-        [Fact]
+        [Fact, TestPriority(1)]
         public async Task AddContactAsync_ShouldReturnSingleContactWithNotZeroIdAndNameEqualsInput()
         {
             // Arrange
@@ -60,15 +67,14 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             Assert.Single(contactEntities);
             Assert.NotEqual(0, contactEntities[0].Id);
             Assert.Equal(contact.Name, contactEntities[0].Name);
-            DeleteContactCleanup();
+            await DeleteContactCleanup();
         }
 
-        [Fact]
+        [Fact, TestPriority(2)]
         public async Task GetContactAsync_ContactExist_ReturnsContactEntity()
         {
             // Arrange
-            context.Add(contact);
-            context.SaveChanges();
+            await InitialAddContact();
 
             // Act
             var result = await sut.GetContactAsync(contact.Name, CancellationToken.None);
@@ -76,32 +82,31 @@ namespace ReversePhoneLookup.IntegrationTests.Repositories
             // Assert
             Assert.NotNull(result);
             Assert.Equal(contact.Name, result.Name);
-            DeleteContactCleanup();
+            await DeleteContactCleanup();
         }
 
-        [Fact]
+        [Fact, TestPriority(3)]
         public async Task GetContactAsync_ContactNotExist_ReturnsNull()
         {
             var result = await sut.GetContactAsync(contact.Name, CancellationToken.None);
             Assert.Null(result);
         }
 
-        [Fact]
+        [Fact, TestPriority(4)]
         public async Task IsContactExists_ContactExists_ReturnsTrue()
         {
             // Arrange
-            context.Add(contact);
-            context.SaveChanges();
+            await InitialAddContact();
 
             // Act
             var result = await sut.IsContactExists(contact.Name);
             
             // Arrange
             Assert.True(result);
-            DeleteContactCleanup();
+            await DeleteContactCleanup();
         }
 
-        [Fact]
+        [Fact, TestPriority(5)]
         public async Task IsContactExists_ContactNotExists_ReturnsFalse()
         {
             Assert.False(await sut.IsContactExists(contact.Name));
